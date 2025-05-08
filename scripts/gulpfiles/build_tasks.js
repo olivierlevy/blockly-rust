@@ -151,6 +151,13 @@ const chunks = [
     scriptExport: 'dart',
     scriptNamedExports: {'Blockly.Dart': 'dartGenerator'},
   },
+  {
+    name: 'rust',
+    files: ['generators/rust.js', 'generators/rust/**/*.js'], // Compiled JS files
+    entry: 'generators/rust.js',                             // Compiled JS entry point
+    scriptExport: 'rust',                                    // UMD export object name
+    scriptNamedExports: {'Blockly.Rust': 'rustGenerator'},   // Global name mapping
+  },
 ];
 
 chunks[0].parent = null;
