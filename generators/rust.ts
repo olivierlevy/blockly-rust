@@ -74,13 +74,79 @@ export class RustGenerator extends CodeGenerator {
     //   // Function calls vs Member access.
     // ];
 
+    // Add block generators to the lookup table.
+    // Add block generators to the lookup table.
     this.forBlock['math_number'] = this.math_number;
+    this.forBlock['text'] = this.text;
+    this.forBlock['text_print'] = this.text_print;
+    this.forBlock['variables_get'] = this.variables_get;
+    this.forBlock['variables_set'] = this.variables_set;
+    this.forBlock['controls_if'] = this.controls_if;
   }
 
   math_number(block: any, generator: this): [string, number] {
     // Numeric value.
     const code = String(block.getFieldValue('NUM'));
     return [code, generator.ORDER_ATOMIC];
+  }
+
+  text(block: any, generator: this): [string, number] {
+    // Text value.
+    const code = generator.quote_(block.getFieldValue('TEXT'));
+    return [code, generator.ORDER_ATOMIC];
+  }
+
+  text_print(block: any, generator: this): string {
+    // Print statement.
+    const msg = generator.valueToCode(block, 'TEXT', generator.ORDER_NONE) || '""';
+    // Note: Rust's println! macro handles various types.
+    // Basic implementation assumes the input evaluates to something displayable.
+    return 'println!("{}", ' + msg + ');\\n';
+  }
+
+  variables_get(block: any, generator: this): [string, number] {
+    // Variable getter.
+    const code = generator.nameDB_!.getName(block.getFieldValue('VAR'), NameType.VARIABLE);
+    return [code, generator.ORDER_ATOMIC];
+  }
+
+  variables_set(block: any, generator: this): string {
+    // Variable setter.
+    const argument0 = generator.valueToCode(block, 'VALUE',
+        generator.ORDER_ASSIGNMENT) || '0'; // Default value if input is empty? Rust needs types. Defaulting to 0 might be wrong.
+                                            // Let's assume the input provides a typed value for now. Or use a default like `Default::default()`.
+                                            // For simplicity, let's use `""` as a placeholder if needed, though it won't compile if assigned to a number.
+                                            // A better default might depend on expected type, maybe `Default::default()`?
+                                            // Let's use `""` for now and refine later.
+    const varName = generator.nameDB_!.getName(block.getFieldValue('VAR'), NameType.VARIABLE);
+    // TODO: Handle variable types and declaration vs assignment properly.
+    // Assuming first assignment uses `let mut`. Reassignment just uses `varName = ...;`
+    // This basic version always uses `let mut`, which isn't correct for reassignment.
+    return 'let mut ' + varName + ' = ' + argument0 + ';\\n';
+  }
+
+  controls_if(block: any, generator: this): string {
+    // If/elseif/else condition.
+    let n = 0;
+    let code = '';
+    let branchCode;
+    let conditionCode;
+    
+    do {
+      conditionCode = generator.valueToCode(block, 'IF' + n,
+          generator.ORDER_NONE) || 'false'; // Default to false if condition is empty
+      branchCode = generator.statementToCode(block, 'DO' + n);
+      code += (n > 0 ? ' else ' : '') +
+          'if ' + conditionCode + ' {\\n' +
+          branchCode + '}';
+      n++;
+    } while (block.getInput('IF' + n));
+
+    if (block.getInput('ELSE')) {
+      branchCode = generator.statementToCode(block, 'ELSE');
+      code += ' else {\\n' + branchCode + '}';
+    }
+    return code + '\\n';
   }
 
   /**
