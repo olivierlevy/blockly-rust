@@ -144,6 +144,7 @@
     "yargs": "^17.2.1"
   },
   "dependencies": {
+    "blockly": "^11.2.2",
     "jsdom": "26.1.0"
   },
   "engines": {
