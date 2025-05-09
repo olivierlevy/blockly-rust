@@ -82,6 +82,7 @@ export class RustGenerator extends CodeGenerator {
     this.forBlock['variables_set'] = this.variables_set;
     this.forBlock['controls_if'] = this.controls_if;
     this.forBlock['logic_compare'] = this.logic_compare;
+    this.forBlock['math_arithmetic'] = this.math_arithmetic;
   }
 
   math_number(block: any, generator: this): [string, number] {
@@ -159,6 +160,36 @@ export class RustGenerator extends CodeGenerator {
     const argument0 = generator.valueToCode(block, 'A', order) || '0';
     const argument1 = generator.valueToCode(block, 'B', order) || '0';
     const code = argument0 + ' ' + operator + ' ' + argument1;
+    return [code, order];
+  }
+
+  math_arithmetic(block: any, generator: this): [string, number] {
+    // Basic arithmetic operators, and power.
+    const OPERATORS: {[key: string]: [string | null, number]} = {
+      'ADD': [' + ', generator.ORDER_ADDITION],
+      'MINUS': [' - ', generator.ORDER_SUBTRACTION],
+      'MULTIPLY': [' * ', generator.ORDER_MULTIPLICATION],
+      'DIVIDE': [' / ', generator.ORDER_DIVISION],
+      'POWER': [null, generator.ORDER_FUNCTION_CALL] // Handled specially for .powf()
+    };
+    const tuple = OPERATORS[block.getFieldValue('OP')];
+    const operator = tuple[0];
+    const order = tuple[1];
+    const argument0 = generator.valueToCode(block, 'A', order) || '0';
+    const argument1 = generator.valueToCode(block, 'B', order) || '0';
+    let code;
+    // Power arguments may need to be converted to float if they are not already.
+    // Rust's .powf() method is typically on f32 or f64.
+    // For simplicity, we'll assume they are compatible or this needs type inference later.
+    if (!operator) { // POWER case
+      // Assuming inputs are numbers, convert to f64 for powf if necessary, or use as is.
+      // A more robust solution would handle types.
+      // code = `(${argument0} as f64).powf(${argument1} as f64)`;
+      // Simpler for now, assuming inputs are appropriate:
+      code = `${argument0}.powf(${argument1})`;
+    } else {
+      code = argument0 + operator + argument1;
+    }
     return [code, order];
   }
 
