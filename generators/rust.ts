@@ -207,6 +207,16 @@ export class RustGenerator extends CodeGenerator {
     // It's protected. A public wrapper is the way.
     return this.scrub_(block, code, thisOnly);
   }
+
+  /**
+   * Public wrapper for the protected provideFunction_ method.
+   * @param desiredName The desired name of the function.
+   * @param code Array of lines of code for the function.
+   * @returns The generated name for the function.
+   */
+  public provideFunction(desiredName: string, code: string[]): string {
+    return this.provideFunction_(desiredName, code);
+  }
 }
 
 export const rustGenerator = new RustGenerator();
