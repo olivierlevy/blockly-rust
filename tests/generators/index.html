@@ -188,6 +188,11 @@ function toDart() {
   setOutput(code);
 }
 
+function toRust() {
+  var code = rustGenerator.workspaceToCode(demoWorkspace);
+  setOutput(code);
+}
+
 function changeIndex() {
   var oneBasedIndex = document.getElementById('indexing').checked;
   demoWorkspace.options.oneBasedIndex = oneBasedIndex;
@@ -205,12 +210,14 @@ import {luaGenerator} from '../../build/lua.loader.mjs';
 import {javascriptGenerator} from '../../build/javascript.loader.mjs';
 import {phpGenerator} from '../../build/php.loader.mjs';
 import {pythonGenerator} from '../../build/python.loader.mjs';
+import {rustGenerator as importedRustGenerator} from '../../build/rust.loader.mjs';
 
 globalThis.dartGenerator = dartGenerator;
 globalThis.luaGenerator = luaGenerator;
 globalThis.javascriptGenerator = javascriptGenerator;
 globalThis.phpGenerator = phpGenerator;
 globalThis.pythonGenerator = pythonGenerator;
+globalThis.rustGenerator = importedRustGenerator;
 
 await loadScript('../../build/msg/en.js');
 await loadScript('./unittest_javascript.js');
@@ -399,6 +406,10 @@ h1 {
       <div style="display: inline-block;">
         <input type="button" value="Dart" onclick="toDart()">
         <br><a target="_blank" href="https://dartpad.dartlang.org/">interpreter</a>
+      </div>
+      <div style="display: inline-block;">
+        <input type="button" value="Rust" onclick="toRust()">
+        <br><a target="_blank" href="https://play.rust-lang.org/">interpreter</a>
       </div>
     </p>
   </td></tr><tr><td height="99%">

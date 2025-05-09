@@ -1,0 +1,3 @@
+// Golden file for Rust generator tests.
+// This file will be populated with the expected output
+// after running the generator tests and verifying the output.
