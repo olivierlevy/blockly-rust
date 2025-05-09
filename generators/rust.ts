@@ -81,6 +81,7 @@ export class RustGenerator extends CodeGenerator {
     this.forBlock['variables_get'] = this.variables_get;
     this.forBlock['variables_set'] = this.variables_set;
     this.forBlock['controls_if'] = this.controls_if;
+    this.forBlock['logic_compare'] = this.logic_compare;
   }
 
   math_number(block: any, generator: this): [string, number] {
@@ -140,6 +141,25 @@ export class RustGenerator extends CodeGenerator {
       code += ' else {\\n' + branchCode + '}';
     }
     return code + '\\n';
+  }
+
+  logic_compare(block: any, generator: this): [string, number] {
+    // Comparison operator.
+    const OPERATORS: {[key: string]: string} = {
+      'EQ': '==',
+      'NEQ': '!=',
+      'LT': '<',
+      'LTE': '<=',
+      'GT': '>',
+      'GTE': '>='
+    };
+    const operator = OPERATORS[block.getFieldValue('OP')];
+    const order = (operator === '==' || operator === '!=') ?
+        generator.ORDER_EQUALITY : generator.ORDER_RELATIONAL;
+    const argument0 = generator.valueToCode(block, 'A', order) || '0';
+    const argument1 = generator.valueToCode(block, 'B', order) || '0';
+    const code = argument0 + ' ' + operator + ' ' + argument1;
+    return [code, order];
   }
 
   /**
