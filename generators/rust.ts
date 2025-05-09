@@ -22,9 +22,9 @@ import * as CROSMath from './rust/math.js';
 import * as CROSText from './rust/text.js';
 import * as CROSVariables from './rust/variables.js';
 import * as CROSProcedures from './rust/procedures.js';
-import * as CROSLops from './rust/loops.js';
+import * as CROSLOops from './rust/loops.js'; // Corrected typo
+import * as CROSLists from './rust/lists.js';
 // import * as CROSUnittest from './rust/unittest.js'; // Removed as unittest handlers will be in tests/
-// Add imports for lists when they are created.
 
 /**
  * Rust code generator.
@@ -82,9 +82,9 @@ export class RustGenerator extends CodeGenerator {
         CROSText,
         CROSVariables,
         CROSProcedures,
-        CROSLops,
+        CROSLOops, // Corrected typo
+        CROSLists,
         // CROSUnittest, // Removed
-        // Add other modules (lists) here when created
     );
   }
 
