@@ -124,24 +124,38 @@ export class RustGenerator extends CodeGenerator {
     // If/elseif/else condition.
     let n = 0;
     let code = '';
-    let branchCode;
-    let conditionCode;
-    
+    let conditionCode, branchCode;
+
     do {
-      conditionCode = generator.valueToCode(block, 'IF' + n,
-          generator.ORDER_NONE) || 'false'; // Default to false if condition is empty
+      conditionCode = generator.valueToCode(block, 'IF' + n, generator.ORDER_NONE) || 'false';
       branchCode = generator.statementToCode(block, 'DO' + n);
+      if (branchCode) {
+        branchCode = generator.prefixLines(branchCode, generator.INDENT);
+      } else {
+        branchCode = ''; // Ensure it's an empty string if no statements
+      }
       code += (n > 0 ? ' else ' : '') +
           'if ' + conditionCode + ' {\\n' +
-          branchCode + '}';
+          branchCode +
+          '}\\n';
       n++;
     } while (block.getInput('IF' + n));
 
     if (block.getInput('ELSE')) {
       branchCode = generator.statementToCode(block, 'ELSE');
-      code += ' else {\\n' + branchCode + '}';
+      if (branchCode) {
+        branchCode = generator.prefixLines(branchCode, generator.INDENT);
+      } else {
+        branchCode = '';
+      }
+      code += 'else {\\n' +
+          branchCode +
+          '}\\n';
     }
-    return code + '\\n';
+    // Remove trailing newline if present, as statement blocks usually add their own.
+    // However, an if/else if/else structure is a single logical statement.
+    // The last `\n` from the final block is appropriate.
+    return code;
   }
 
   logic_compare(block: any, generator: this): [string, number] {
