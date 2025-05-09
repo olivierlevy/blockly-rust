@@ -67,3 +67,9 @@ export function logic_compare(block: Block, generator: RustGenerator): [string, 
   const code = argument0 + ' ' + operator + ' ' + argument1;
   return [code, order];
 }
+
+export function logic_boolean(block: Block, generator: RustGenerator): [string, number] {
+  // Boolean values true and false.
+  const code = (block.getFieldValue('BOOL') === 'TRUE') ? 'true' : 'false';
+  return [code, generator.ORDER_ATOMIC];
+}
