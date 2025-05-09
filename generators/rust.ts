@@ -24,6 +24,7 @@ import * as CROSVariables from './rust/variables.js';
 import * as CROSProcedures from './rust/procedures.js';
 import * as CROSLOops from './rust/loops.js'; // Corrected typo
 import * as CROSLists from './rust/lists.js';
+import * as CROSColour from './rust/colour.js';
 // import * as CROSUnittest from './rust/unittest.js'; // Removed as unittest handlers will be in tests/
 
 /**
@@ -84,6 +85,7 @@ export class RustGenerator extends CodeGenerator {
         CROSProcedures,
         CROSLOops, // Corrected typo
         CROSLists,
+        CROSColour,
         // CROSUnittest, // Removed
     );
   }
