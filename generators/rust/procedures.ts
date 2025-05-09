@@ -14,7 +14,11 @@ import {NameType} from '../../core/names.js';
 
 export function procedures_defnoreturn(block: Block, generator: RustGenerator): string {
   const funcName = generator.nameDB_!.getName(block.getFieldValue('NAME'), NameType.PROCEDURE);
-  let branch = generator.statementToCode(block, 'STACK') || '';
+  let branch = '';
+  // ProcedureBlock has 'hasStatements_' property.
+  if ((block as any).hasStatements_ === undefined || (block as any).hasStatements_) {
+    branch = generator.statementToCode(block, 'STACK') || '';
+  }
   if (branch && generator.STATEMENT_PREFIX) {
     branch = generator.prefixLines(generator.STATEMENT_PREFIX.replace(/%1/g, '\'' + block.id + '\''), generator.INDENT) + branch;
   }
@@ -26,7 +30,7 @@ export function procedures_defnoreturn(block: Block, generator: RustGenerator): 
   for (let i = 0; i < variables.length; i++) {
     args[i] = generator.nameDB_!.getName(variables[i], NameType.VARIABLE) + ": String /* TODO: type */";
   }
-  let code = 'fn ' + funcName + '(' + args.join(', ') + ') {\\n' + branch + '}';
+  let code = 'fn ' + funcName + '(' + args.join(', ') + ') {\n' + branch + '}';
   code = generator.scrub(block, code);
   generator.addDefinition('%' + funcName, code);
   return ''; 
@@ -34,7 +38,11 @@ export function procedures_defnoreturn(block: Block, generator: RustGenerator): 
 
 export function procedures_defreturn(block: Block, generator: RustGenerator): string {
   const funcName = generator.nameDB_!.getName(block.getFieldValue('NAME'), NameType.PROCEDURE);
-  let branch = generator.statementToCode(block, 'STACK') || '';
+  let branch = '';
+  // ProcedureBlock has 'hasStatements_' property.
+  if ((block as any).hasStatements_ === undefined || (block as any).hasStatements_) {
+    branch = generator.statementToCode(block, 'STACK') || '';
+  }
   if (branch && generator.STATEMENT_PREFIX) {
     branch = generator.prefixLines(generator.STATEMENT_PREFIX.replace(/%1/g, '\'' + block.id + '\''), generator.INDENT) + branch;
   }
@@ -46,17 +54,17 @@ export function procedures_defreturn(block: Block, generator: RustGenerator): st
 
   if (returnValue) {
     // If branch is empty, returnValue is the body. Otherwise, it's the last statement.
-    returnValue = (branch.trim() === '' ? '' : generator.INDENT) + returnValue + '\\n'; 
+    returnValue = (branch.trim() === '' ? '' : generator.INDENT) + returnValue + '\n'; 
   } else {
     // Function with return type must return a value.
     returnValue = (branch.trim() === '' ? '' : generator.INDENT) + 
-                  '// TODO: Define return type and default value if function body is empty\\n' +
+                  '// TODO: Define return type and default value if function body is empty\n' +
                   (branch.trim() === '' ? '' : generator.INDENT) + 
-                  'Default::default()\\n';
+                  'Default::default()\n';
   }
   
-  if (branch.trim() !== '' && !branch.endsWith('\\n')) {
-      branch += '\\n';
+  if (branch.trim() !== '' && !branch.endsWith('\n')) {
+      branch += '\n';
   }
   
   const args = [];
@@ -76,7 +84,7 @@ export function procedures_defreturn(block: Block, generator: RustGenerator): st
   // The current `returnValue` is already formatted as an expression with a newline.
   // If `branch` is empty, `returnValue` is the body. If `branch` has statements, `returnValue` is appended.
 
-  let code = 'fn ' + funcName + '(' + args.join(', ') + ') -> ' + returnType + ' {\\n' +
+  let code = 'fn ' + funcName + '(' + args.join(', ') + ') -> ' + returnType + ' {\n' +
       branch + returnValue + '}';
   code = generator.scrub(block, code);
   generator.addDefinition('%' + funcName, code);
@@ -90,7 +98,7 @@ export function procedures_callnoreturn(block: Block, generator: RustGenerator):
   for (let i = 0; i < variables.length; i++) { // This should iterate over arguments supplied to the call block
     args[i] = generator.valueToCode(block, 'ARG' + i, generator.ORDER_NONE) || '/* TODO: default_arg */';
   }
-  const code = funcName + '(' + args.join(', ') + ');\\n';
+  const code = funcName + '(' + args.join(', ') + ');\n';
   return code;
 }
 
@@ -107,13 +115,13 @@ export function procedures_callreturn(block: Block, generator: RustGenerator): [
 
 export function procedures_ifreturn(block: Block, generator: RustGenerator): string {
   const condition = generator.valueToCode(block, 'CONDITION', generator.ORDER_NONE) || 'false';
-  let code = 'if ' + condition + ' {\\n';
+  let code = 'if ' + condition + ' {\n';
   if (block.getInput('VALUE')) { // Check if the VALUE input exists on this block
     const value = generator.valueToCode(block, 'VALUE', generator.ORDER_NONE) || 'Default::default() /* TODO: type specific default */';
-    code += generator.INDENT + 'return ' + value + ';\\n';
+    code += generator.INDENT + 'return ' + value + ';\n';
   } else {
-    code += generator.INDENT + 'return;\\n';
+    code += generator.INDENT + 'return;\n';
   }
-  code += '}\\n';
+  code += '}\n';
   return code;
 }

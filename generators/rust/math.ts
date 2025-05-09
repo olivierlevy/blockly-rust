@@ -116,6 +116,40 @@ export function math_single(block: Block, generator: RustGenerator): [string, nu
   return [code, generator.ORDER_FUNCTION_CALL];
 }
 
+export function math_change(block: Block, generator: RustGenerator): string {
+  // Add to a variable in place.
+  const varName = generator.nameDB_!.getName(block.getFieldValue('VAR'),
+      'VARIABLE'); // Assuming variable type is VARIABLE
+  const delta = generator.valueToCode(block, 'DELTA',
+      generator.ORDER_ASSIGNMENT) || '0';
+  // Assuming the variable and delta are numeric types compatible with +=
+  // e.g., let mut x: i32 = 0; x += 1;
+  // The variable must be declared as mutable.
+  return `${varName} += ${delta};\n`;
+}
+
+export function math_round(block: Block, generator: RustGenerator): [string, number] {
+  const operator = block.getFieldValue('OP'); // ROUND, ROUNDUP, ROUNDDOWN
+  const arg = generator.valueToCode(block, 'NUM',
+      generator.ORDER_FUNCTION_CALL) || '0';
+  let code;
+
+  switch (operator) {
+    case 'ROUND':
+      code = `(${arg} as f64).round()`;
+      break;
+    case 'ROUNDUP':
+      code = `(${arg} as f64).ceil()`;
+      break;
+    case 'ROUNDDOWN':
+      code = `(${arg} as f64).floor()`;
+      break;
+    default:
+      throw Error('Unknown math rounding operator: ' + operator);
+  }
+  return [code, generator.ORDER_FUNCTION_CALL];
+}
+
 export function math_constant(block: Block, generator: RustGenerator): [string, number] {
   const CONSTANTS: {[key: string]: string} = {
     'PI': 'std::f64::consts::PI',
@@ -161,7 +195,18 @@ export function math_number_property(block: Block, generator: RustGenerator): [s
       // TODO: Consider adding a helper function to definitions if commonly needed.
       code = 'is_prime(' + number_to_check + ')'; // Placeholder
       generator.addDefinition('is_prime_placeholder', 
-        '// TODO: Implement is_prime(n: i64) -> bool\\nfn is_prime(n: i64) -> bool {\\n  if n <= 1 { return false; }\\n  if n <= 3 { return true; }\\n  if n % 2 == 0 || n % 3 == 0 { return false; }\\n  let mut i = 5;\\n  while i * i <= n {\\n    if n % i == 0 || n % (i + 2) == 0 { return false; }\\n    i += 6;\\n  }\\n  true\\n}');
+        `// TODO: Implement is_prime(n: i64) -> bool
+fn is_prime(n: i64) -> bool {
+  if n <= 1 { return false; }
+  if n <= 3 { return true; }
+  if n % 2 == 0 || n % 3 == 0 { return false; }
+  let mut i = 5;
+  while i * i <= n {
+    if n % i == 0 || n % (i + 2) == 0 { return false; }
+    i += 6;
+  }
+  true
+}`);
       break;
     default:
       throw Error('Unknown math property: ' + property);
@@ -231,5 +276,36 @@ export function math_atan2(block: Block, generator: RustGenerator): [string, num
       generator.ORDER_NONE) || '0';
   // Assuming f64 for .atan2()
   const code = `${argument0}.atan2(${argument1})`;
+  return [code, generator.ORDER_FUNCTION_CALL];
+}
+
+export function math_trig(block: Block, generator: RustGenerator): [string, number] {
+  const operator = block.getFieldValue('OP');
+  const arg = generator.valueToCode(block, 'NUM',
+      generator.ORDER_FUNCTION_CALL) || '0';
+  let code;
+
+  switch (operator) {
+    case 'SIN':
+      code = `(${arg} as f64).to_radians().sin()`;
+      break;
+    case 'COS':
+      code = `(${arg} as f64).to_radians().cos()`;
+      break;
+    case 'TAN':
+      code = `(${arg} as f64).to_radians().tan()`;
+      break;
+    case 'ASIN':
+      code = `(${arg} as f64).asin().to_degrees()`;
+      break;
+    case 'ACOS':
+      code = `(${arg} as f64).acos().to_degrees()`;
+      break;
+    case 'ATAN':
+      code = `(${arg} as f64).atan().to_degrees()`;
+      break;
+    default:
+      throw Error('Unknown math trigonometric operator: ' + operator);
+  }
   return [code, generator.ORDER_FUNCTION_CALL];
 }

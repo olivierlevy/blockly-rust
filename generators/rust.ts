@@ -120,7 +120,7 @@ export class RustGenerator extends CodeGenerator {
   finish(code: string): string {
     let allDefs = '';
     if (this.definitions_ && Object.keys(this.definitions_).length > 0) {
-        allDefs = Object.values(this.definitions_).join('\\n\\n') + '\\n\\n\\n';
+        allDefs = Object.values(this.definitions_).join('\n\n') + '\n\n\n';
     }
     
     this.definitions_ = Object.create(null);
@@ -138,7 +138,7 @@ export class RustGenerator extends CodeGenerator {
    * @return Legal line of code.
    */
   scrubNakedValue(line: string): string {
-    return line + ';\\n';
+    return line + ';\n';
   }
 
   /**
@@ -148,9 +148,11 @@ export class RustGenerator extends CodeGenerator {
    * @return Rust string.
    */
   quote_(string: string): string {
+    // Do not escape \n to \\n, as actual newlines are desired in the output.
+    // The test runner or comparison tool should handle line ending normalization if necessary.
     string = string.replace(/\\/g, '\\\\')
-               .replace(/\n/g, '\\n')
-               .replace(/\r/g, '\\r')
+               // .replace(/\n/g, '\\n') // Removed this line
+               .replace(/\r/g, '\\r') // Keep \r removal or normalization if needed
                .replace(/"/g, '\\"')
                .replace(/'/g, "\\'");
     return '"' + string + '"';

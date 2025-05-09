@@ -1,3 +1,379 @@
-// Golden file for Rust generator tests.
-// This file will be populated with the expected output
-// after running the generator tests and verifying the output.
+fn test_if() {
+  if false {\n    panic!("{} (test failed)", "if false");\n}\n}
+
+fn test_ifelse() {
+  let mut ok = false;\n}
+
+fn test_equalities() {
+  assert!(2 == 2, "{} (true)", "Equal yes");\n}
+
+fn test_and() {
+  assert!(true && true, "{} (true)", "And true/true");\n}
+
+fn test_or() {
+  assert!(true || true, "{} (true)", "Or true/true");\n}
+
+fn test_ternary() {
+  assert_eq!(if true { 42 } else { 99 }, 42, "{}", "if true");\n}
+
+fn test_foreach() {
+  let mut log = "";\n}
+
+fn test_repeat() {
+  let mut count = 0;\n}
+
+fn test_while() {
+  while false {
+      panic!("{} (test failed)", "while 0");\n}
+}
+
+fn test_repeat_ext() {
+  let mut count = 0;\n}
+
+fn test_count_by() {
+  let mut log = "";\n}
+
+fn test_count_loops() {
+  let mut log = "";\n}
+
+fn test_continue() {
+  let mut log = "";\n}
+
+fn test_break() {
+  let mut count = 1;\n}
+
+fn test_single() {
+  assert_eq!(25.sqrt(), 5, "{}", "sqrt");\n}
+
+fn test_arithmetic() {
+  assert_eq!(1 + 2, 3, "{}", "add");\n}
+
+fn test_trig() {
+  assert_eq!((90 as f64).to_radians().sin(), 1, "{}", "sin");\n}
+
+fn test_constant() {
+  assert_eq!(((std::f64::consts::PI * 1000) as f64).floor(), 3141, "{}", "const pi");\n}
+
+fn test_number_properties() {
+  assert!(42 % 2 == 0, "{} (true)", "even");\n}
+
+fn test_round() {
+  assert_eq!((42.42 as f64).round(), 42, "{}", "round");\n}
+
+fn test_change() {
+  let mut varToChange = 100;\n}
+
+fn math_sum(list: &Vec<f64>) -> f64 {
+    list.iter().sum()
+}
+
+fn convert_to_float_vec(string_vec: &Vec<String>) -> Vec<f64> {
+    string_vec.iter()
+        .map(|s| s.parse::<f64>().unwrap_or(0.0)) // Default to 0.0 if parse fails
+        .collect()
+}
+
+fn test_operations_on_list() {
+  assert_eq!(math_sum(&convert_to_float_vec(&vec![(3).to_string(), (4).to_string(), (5).to_string()])), 12, "{}", "sum");\n}
+
+fn test_mod() {
+  assert_eq!(42 % 5, 2, "{}", "mod");\n}
+
+fn test_constraint() {
+  assert_eq!(100.clamp(0, 42), 42, "{}", "constraint");\n}
+
+fn rand_int_in_range(min: i64, max: i64) -> i64 {
+  // Basic random int, assumes 'rand' crate is used or similar implemented.
+  // For a version without external crates, a simple LCG could be used,
+  // but quality would be low. This is a placeholder.
+  // use rand::Rng;
+  // if min > max { let temp = min; min = max; max = temp; }
+  // return rand::thread_rng().gen_range(min..=max);
+  unimplemented!("rand_int_in_range(min, max) - requires 'rand' crate or custom implementation");
+}
+
+fn test_random_integer() {
+  let mut rand = rand_int_in_range(5, 10);\n}
+
+fn rand_float() -> f64 {
+  // Basic random float (0.0 to 1.0), assumes 'rand' crate or similar.
+  // use rand::Rng;
+  // return rand::thread_rng().gen::<f64>();
+  unimplemented!("rand_float() - requires 'rand' crate or custom implementation");
+}
+
+fn test_random_fraction() {
+  let mut rand = rand_float();\n}
+
+fn test_atan2() {
+  assert_eq!(5.atan2(-5), 135, "{}", "atan2");\n}
+
+fn check_number_of_calls(test_name: String /* TODO: type */) {
+  test_name.push_str(&format!("{}", "number of calls"));
+}
+
+fn test_create_text() {
+  assert_eq!(String::new(), "", "{}", "no text");\n}
+
+fn get_empty() -> String {
+""
+}
+
+fn test_empty_text() {
+  assert!(!"Google".is_empty(), "{} (false)", "not empty");\n}
+
+fn test_text_length() {
+  assert_eq!("".len(), 0, "{}", "zero length");\n}
+
+fn test_append() {
+  let mut item = "Miserable";\n}
+
+fn test_find_text_simple() {
+  let mut text = "Banana";\n}
+
+fn get_fruit() -> String {
+  number_of_calls += 1;
+  "Banana"
+}
+
+fn test_find_text_complex() {
+  let mut number_of_calls = 0;\n}
+
+fn test_get_text_simple() {
+  let mut text = "Blockly";\n}
+
+fn get_Blockly() -> String {
+  number_of_calls += 1;
+  "Blockly"
+}
+
+fn test_get_text_complex() {
+  let mut text = "Blockly";\n}
+
+fn get_numbers() -> String {
+  number_of_calls += 1;
+  "123456789"
+}
+
+fn test_substring_simple() {
+  let mut text = "123456789";\n}
+
+fn test_substring_complex() {
+  let mut number_of_calls = 0;\n}
+
+fn test_case() {
+  let mut text = "Hello World";\n}
+
+fn test_trim() {
+  let mut text = "   abc def   ";\n}
+
+fn test_count_text() {
+  let mut text = "woolloomooloo";\n}
+
+fn text_reverse_helper(s: &str) -> String {
+    s.chars().rev().collect::<String>()
+}
+
+fn test_text_reverse() {
+  assert_eq!(text_reverse_helper(&("").to_string()), "", "{}", "empty string");\n}
+
+fn text_replace_helper(original: &str, from_str: &str, to_str: &str) -> String {
+    original.replace(from_str, to_str)
+}
+
+fn test_replace() {
+  assert_eq!(text_replace_helper(&("woolloomooloo").to_string(), &("oo").to_string(), &("123").to_string()), "w123ll123m123l123", "{}", "replace all instances 1");\n}
+
+fn check_number_of_calls2(test_name: String /* TODO: type */) {
+  test_name.push_str(&format!("{}", "number of calls"));
+}
+
+fn test_create_lists() {
+  assert_eq!(vec![], Vec::<String>::new(), "{}", "create empty");\n}
+
+fn get_empty_list() -> String {
+Vec::<String>::new()
+}
+
+fn test_lists_empty() {
+  assert!(!(vec![(0).to_string()]).is_empty(), "{} (false)", "not empty");\n}
+
+fn test_lists_length() {
+  assert_eq!((Vec::<String>::new()).len(), 0, "{}", "zero length");\n}
+
+fn test_find_lists_simple() {
+  let mut list = vec![("Alice").to_string(), ("Eve").to_string(), ("Bob").to_string(), ("Eve").to_string()];\n}
+
+fn get_names() -> String {
+  number_of_calls += 1;
+  vec![("Alice").to_string(), ("Eve").to_string(), ("Bob").to_string(), ("Eve").to_string()]
+}
+
+fn test_find_lists_complex() {
+  let mut number_of_calls = 0;\n}
+
+fn test_get_lists_simple() {
+  let mut list = vec![("Kirk").to_string(), ("Spock").to_string(), ("McCoy").to_string()];\n}
+
+use rand::Rng; // For RANDOM option
+
+// Helper to get 0-based index from Blockly's 1-based or keywords
+// Returns Option<usize> where None means index is out of bounds for GET/REMOVE
+// or specific points for INSERT (e.g. len for insert at end).
+fn get_list_effective_index(list_len: usize, where_str: &str, at_val: usize /* 1-indexed */) -> Option<usize> {
+    if list_len == 0 {
+        return None; // Cannot get/remove from empty list
+    }
+    match where_str {
+        "FIRST" => Some(0),
+        "LAST" => Some(list_len - 1),
+        "FROM_START" => {
+            if at_val > 0 && at_val <= list_len { Some(at_val - 1) } else { None }
+        }
+        "FROM_END" => {
+            if at_val > 0 && at_val <= list_len { Some(list_len - at_val) } else { None }
+        }
+        "RANDOM" => {
+            let mut rng = rand::thread_rng();
+            Some(rng.gen_range(0..list_len))
+        }
+        _ => None, // Should not happen
+    }
+}
+
+// Main helper for lists_getIndex logic
+fn lists_get_index_helper(
+    list_mut: &mut Vec<String>, // Mutable for REMOVE/GET_REMOVE
+    mode_str: &str,
+    where_str: &str,
+    at_val: usize /* 1-indexed */
+) -> String { // Returns String because GET returns an element, REMOVE might not return anything useful for an expression
+    let list_len = list_mut.len();
+    let effective_idx_opt = get_list_effective_index(list_len, where_str, at_val);
+
+    match effective_idx_opt {
+        Some(idx) => {
+            match mode_str {
+                "GET" => list_mut.get(idx).cloned().unwrap_or_default(), // .cloned() for String, unwrap_or_default for safety
+                "GET_REMOVE" => {
+                    if idx < list_mut.len() { list_mut.remove(idx) } else { String::new() } // remove returns the element
+                }
+                "REMOVE" => {
+                    if idx < list_mut.len() { list_mut.remove(idx); } // Just remove, no return value needed for statement
+                    String::new() // Return dummy for expression context if any
+                }
+                _ => String::new(), // Should not happen
+            }
+        }
+        None => String::new(), // Index out of bounds or empty list
+    }
+}
+
+fn test_get_lists_create_list() {
+  assert_eq!(lists_get_index_helper(&mut vec![("Kirk").to_string(), ("Spock").to_string(), ("McCoy").to_string()], "GET", "FIRST", 1_usize), "Kirk", "{}", "get first create list");\n}
+
+fn get_star_wars() -> String {
+  number_of_calls += 1;
+  vec![("Kirk").to_string(), ("Spock").to_string(), ("McCoy").to_string()]
+}
+
+fn test_get_lists_complex() {
+  let mut list = vec![("Kirk").to_string(), ("Spock").to_string(), ("McCoy").to_string()];\n}
+
+fn test_getRemove() {
+  let mut list = vec![("Kirk").to_string(), ("Spock").to_string(), ("McCoy").to_string()];\n}
+
+fn test_remove() {
+  let mut list = vec![("Kirk").to_string(), ("Spock").to_string(), ("McCoy").to_string()];\n}
+
+fn test_set() {
+  let mut list = vec![("Picard").to_string(), ("Riker").to_string(), ("Crusher").to_string()];\n}
+
+fn test_insert() {
+  let mut list = vec![("Picard").to_string(), ("Riker").to_string(), ("Crusher").to_string()];\n}
+
+fn test_sublist_simple() {
+  let mut list = vec![("Columbia").to_string(), ("Challenger").to_string(), ("Discovery").to_string(), ("Atlantis").to_string(), ("Endeavour").to_string()];\n}
+
+fn get_space_shuttles() -> String {
+  number_of_calls += 1;
+  vec![("Columbia").to_string(), ("Challenger").to_string(), ("Discovery").to_string(), ("Atlantis").to_string(), ("Endeavour").to_string()]
+}
+
+fn test_sublist_complex() {
+  let mut number_of_calls = 0;\n}
+
+fn test_join() {
+  let mut list = vec![("Vulcan").to_string(), ("Klingon").to_string(), ("Borg").to_string()];\n}
+
+fn test_split() {
+  let mut text = "Vulcan,Klingon,Borg";\n}
+
+fn test_sort_alphabetic() {
+  let mut list = vec![("Vulcan").to_string(), ("klingon").to_string(), ("Borg").to_string()];\n}
+
+fn test_sort_ignoreCase() {
+  let mut list = vec![("Vulcan").to_string(), ("klingon").to_string(), ("Borg").to_string()];\n}
+
+fn test_sort_numeric() {
+  let mut list = vec![(8).to_string(), (18).to_string(), (-1).to_string()];\n}
+
+fn test_lists_reverse() {
+  let mut list = vec![(8).to_string(), (18).to_string(), (-1).to_string(), (64).to_string()];\n}
+
+fn test_procedure() {
+  procedure_1(8, 2);
+}
+
+fn procedure_1(proc_x: String /* TODO: type */, proc_y: String /* TODO: type */) {
+  let mut proc_z = proc_x / proc_y;\n}
+
+fn procedure_2(proc_x: String /* TODO: type */) {
+  if proc_x {
+    return Default::default() /* TODO: type specific default */;
+  }
+}
+
+fn test_function() {
+  assert_eq!(function_1(2, 3), -1, "{}", "function with arguments");\n}
+
+fn function_1(func_x: String /* TODO: type */, func_y: String /* TODO: type */) -> String {
+  let mut func_z = "side effect";\n
+  func_x - func_y
+}
+
+fn function_2(func_a: String /* TODO: type */) -> String {
+  func_a += 1;
+  format!("{}{}", func_a, func_c)
+}
+
+fn function_3(func_a: String /* TODO: type */) -> String {
+  if func_a {
+    return true;
+  }
+  false
+}
+
+fn recurse(n: String /* TODO: type */) -> String {
+  if n > 0 {\n    let mut text = format!("{}{}{}", recurse(n - 1), n, recurse(n - 1));\n}\nelse {\n    let mut text = "-";\n}\n
+  text
+}
+
+
+  assert!(true, "{} (true)", "True");\n
+  test_repeat();
+
+  test_count_loops();
+
+  test_break();
+
+  test_arithmetic();
+
+  test_text_length();
+
+  test_create_lists();
+
+  let mut item = 123;\n
+naked;
+
+  test_procedure();

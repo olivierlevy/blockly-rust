@@ -40,7 +40,7 @@ export function controls_repeat_ext(block: Block, generator: RustGenerator): str
   // The variable for the loop counter is often unused if it's just repetition.
   // If a variable is needed, the block would be different (e.g. count with).
   // For `controls_repeat_ext`, `_` is conventional for an unused loop variable.
-  const code = 'for _ in 0..' + repeats + ' {\\n' + branch + '}\\n';
+  const code = 'for _ in 0..' + repeats + ' {\n' + branch + '}\n';
   return code;
 }
 
@@ -62,7 +62,7 @@ export function controls_whileUntil(block: Block, generator: RustGenerator): str
   if (until) {
     argument0 = '!' + argument0;
   }
-  return 'while ' + argument0 + ' {\\n' + branch + '}\\n';
+  return 'while ' + argument0 + ' {\n' + branch + '}\n';
 }
 
 export function controls_for(block: Block, generator: RustGenerator): string {
@@ -107,13 +107,13 @@ export function controls_for(block: Block, generator: RustGenerator): string {
   // Simple case: assume argument0, argument1, increment are numeric strings or variables.
   // And increment is positive.
   if (increment === '1') {
-    code = 'for ' + variable0 + ' in ' + argument0 + '..=' + argument1 + ' {\\n' +
-        branch + '}\\n';
+    code = 'for ' + variable0 + ' in ' + argument0 + '..=' + argument1 + ' {\n' +
+        branch + '}\n';
   } else {
     // Using .step_by(). Note: this requires the range to be an iterator.
     // (start..=end) creates an `std::ops::RangeInclusive`.
-    code = 'for ' + variable0 + ' in (' + argument0 + '..=' + argument1 + ').step_by(' + increment + ' as usize) {\\n' +
-        branch + '}\\n';
+    code = 'for ' + variable0 + ' in (' + argument0 + '..=' + argument1 + ').step_by(' + increment + ' as usize) {\n' +
+        branch + '}\n';
     // Added `as usize` for step, assuming step is an integer. Range values also likely need to be usize or compatible.
   }
   return code;
@@ -139,8 +139,8 @@ export function controls_forEach(block: Block, generator: RustGenerator): string
   // Assuming argument0 is an expression that yields an iterable collection.
   // .iter() is common for borrowing iteration. .into_iter() for consuming.
   // Let's use .iter() for non-mutating iteration by default.
-  const code = 'for ' + variable0 + ' in ' + argument0 + '.iter() {\\n' +
-      branch + '}\\n';
+  const code = 'for ' + variable0 + ' in ' + argument0 + '.iter() {\n' +
+      branch + '}\n';
   return code;
 }
 
@@ -148,9 +148,9 @@ export function controls_flow_statements(block: Block, generator: RustGenerator)
   // Flow statements: break, continue.
   switch (block.getFieldValue('FLOW')) {
     case 'BREAK':
-      return 'break;\\n';
+      return 'break;\n';
     case 'CONTINUE':
-      return 'continue;\\n';
+      return 'continue;\n';
   }
   throw Error('Unknown flow statement.');
 }
