@@ -21,7 +21,7 @@ import * as CROSLogic from './rust/logic.js';
 import * as CROSMath from './rust/math.js';
 import * as CROSText from './rust/text.js';
 import * as CROSVariables from './rust/variables.js';
-import * as CROSUnittest from './rust/unittest.js';
+// import * as CROSUnittest from './rust/unittest.js'; // Removed as unittest handlers will be in tests/
 // Add imports for loops, procedures, lists when they are created.
 
 /**
@@ -79,7 +79,7 @@ export class RustGenerator extends CodeGenerator {
         CROSMath,
         CROSText,
         CROSVariables,
-        CROSUnittest,
+        // CROSUnittest, // Removed
         // Add other modules (loops, procedures, lists) here when created
     );
   }
