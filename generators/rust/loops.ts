@@ -44,6 +44,19 @@ export function controls_repeat_ext(block: Block, generator: RustGenerator): str
   return code;
 }
 
+export function controls_repeat(block: Block, generator: RustGenerator): string {
+  // Repeat n times (internal number).
+  const repeats = String(Number(block.getFieldValue('TIMES')));
+  let branch = generator.statementToCode(block, 'DO');
+  if (branch) {
+    branch = generator.prefixLines(branch, generator.INDENT);
+  } else {
+    branch = '';
+  }
+  const code = 'for _ in 0..' + repeats + ' {\n' + branch + '}\n';
+  return code;
+}
+
 export function controls_whileUntil(block: Block, generator: RustGenerator): string {
   // Do while/until loop.
   const until = block.getFieldValue('MODE') === 'UNTIL';
