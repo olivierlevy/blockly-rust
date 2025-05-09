@@ -21,8 +21,9 @@ import * as CROSLogic from './rust/logic.js';
 import * as CROSMath from './rust/math.js';
 import * as CROSText from './rust/text.js';
 import * as CROSVariables from './rust/variables.js';
+import * as CROSProcedures from './rust/procedures.js';
 // import * as CROSUnittest from './rust/unittest.js'; // Removed as unittest handlers will be in tests/
-// Add imports for loops, procedures, lists when they are created.
+// Add imports for loops, lists when they are created.
 
 /**
  * Rust code generator.
@@ -79,8 +80,9 @@ export class RustGenerator extends CodeGenerator {
         CROSMath,
         CROSText,
         CROSVariables,
+        CROSProcedures,
         // CROSUnittest, // Removed
-        // Add other modules (loops, procedures, lists) here when created
+        // Add other modules (loops, lists) here when created
     );
   }
 
@@ -164,6 +166,44 @@ export class RustGenerator extends CodeGenerator {
           'Generator init was not called before blockToCode was called.');
     }
     return super.blockToCode(block, opt_thisOnly);
+  }
+
+  /**
+   * Adds a definition to the dictionary.
+   * @param key The key for the definition.
+   * @param definition The definition code.
+   */
+  public addDefinition(key: string, definition: string): void {
+    this.definitions_[key] = definition;
+  }
+
+  /**
+   * Public wrapper for the protected scrub_ method.
+   * @param block The block being scrubbed.
+   * @param code The code to scrub.
+   * @param thisOnly True to generate code for only this statement.
+   * @returns The scrubbed code.
+   */
+  public scrub(block: any, code: string, thisOnly?: boolean): string {
+    // Call the protected scrub_ method of the superclass or this class if overridden
+    // For now, assuming we want the superclass's scrub_ behavior if not overridden
+    // or if RustGenerator doesn't have its own specific scrub_ logic yet.
+    // If RustGenerator had its own this.scrub_ that calls super.scrub_ it would be:
+    // return this.scrub_(block, code, thisOnly);
+    // Since scrub_ is on CodeGenerator and we are RustGenerator:
+    // We need to call it carefully. The original scrub_ is a method of CodeGenerator.
+    // A direct call to a protected super method from a public method of the subclass
+    // is fine if the method exists on the subclass or superclass.
+    // Let's assume scrub_ is available as a protected method.
+    // The `scrub_` method is called by `blockToCode`.
+    // The `scrub_` method itself calls `blockToCode` for connected blocks.
+    // It's safer to just call the public `blockToCode` if that's what `scrub_` does,
+    // or replicate minimal scrubbing if needed.
+    // However, `scrub_` is usually for handling orphaned value blocks etc.
+    // The `scrub_` method in `CodeGenerator` is:
+    // scrub_(block: Block, code: string, opt_thisOnly?: boolean): string
+    // It's protected. A public wrapper is the way.
+    return this.scrub_(block, code, thisOnly);
   }
 }
 
