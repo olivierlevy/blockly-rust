@@ -189,8 +189,14 @@ function toDart() {
 }
 
 function toRust() {
-  var code = rustGenerator.workspaceToCode(demoWorkspace);
-  setOutput(code);
+  try {
+    var code = rustGenerator.workspaceToCode(demoWorkspace);
+    setOutput(code);
+  } catch (e) {
+    // If workspaceToCode throws for an unimplemented block,
+    // display the error message so it can be written to the output file.
+    setOutput(e.message ? e.message : String(e));
+  }
 }
 
 function changeIndex() {
