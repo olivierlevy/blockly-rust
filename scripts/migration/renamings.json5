@@ -1368,6 +1368,11 @@
       newPath: 'Blockly.Lua',
     },
     {
+      oldName: 'Blockly.Rust',
+      newExport: 'rustGenerator',
+      newPath: 'Blockly.Rust',
+    },
+    {
       oldName: 'Blockly.PHP',
       newExport: 'phpGenerator',
       newPath: 'Blockly.PHP',

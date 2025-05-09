@@ -130,7 +130,8 @@ FactoryUtils.getGeneratorStub = function(block, generatorLanguage) {
     'Python': '',
     'PHP': ';',
     'Lua': '',
-    'Dart': ';'
+    'Dart': ';',
+    'Rust': ';',
   };
   code.push("  // TODO: Assemble " + language + " into code variable.");
   if (block.outputConnection) {

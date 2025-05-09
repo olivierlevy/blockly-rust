@@ -206,6 +206,7 @@ export default [
         'dartGenerator': true,
         'javascriptGenerator': true,
         'luaGenerator': true,
+        'rustGenerator': true,
         'phpGenerator': true,
         'pythonGenerator': true,
       },

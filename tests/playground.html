@@ -11,6 +11,7 @@
       import '../build/blocks.loader.mjs';
       import {dartGenerator} from '../build/dart.loader.mjs';
       import {luaGenerator} from '../build/lua.loader.mjs';
+      import {rustGenerator} from '../build/rust.loader.mjs';
       import {javascriptGenerator} from '../build/javascript.loader.mjs';
       import {phpGenerator} from '../build/php.loader.mjs';
       import {pythonGenerator} from '../build/python.loader.mjs';
@@ -196,6 +197,7 @@
           'PHP': phpGenerator,
           'Lua': luaGenerator,
           'Dart': dartGenerator,
+          'Rust': rustGenerator,
         }[lang];
         var output = document.getElementById('importExport');
         output.value = generator.workspaceToCode(workspace);
@@ -438,6 +440,9 @@
         document
           .getElementById('to-code-dart')
           .addEventListener('click', () => toCode('Dart'));
+        document
+          .getElementById('to-code-rust')
+          .addEventListener('click', () => toCode('Rust'));
 
         document
           .getElementById('scatter')
@@ -560,6 +565,7 @@
       <input id="to-code-php" type="button" value="To PHP" />
       <input id="to-code-lua" type="button" value="To Lua" />
       <input id="to-code-dart" type="button" value="To Dart" />
+      <input id="to-code-rust" type="button" value="To Rust" />
       <br />
       <textarea id="importExport" style="width: 26%; height: 12em"></textarea>
     </p>

@@ -32,6 +32,7 @@ blockly/
      |- dart_compressed.js
      |- javascript_compressed.js
      |- lua_compressed.js
+     |- rust_compressed.js
      |- php_compressed.js
      `- python_compressed.js
 

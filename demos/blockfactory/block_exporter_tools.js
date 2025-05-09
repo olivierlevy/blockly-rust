@@ -98,7 +98,7 @@ BlockExporterTools.prototype.getBlockDefinitions =
  * Return the generator code of each block type in an array in a given language.
  * @param {!Object} blockXmlMap Map of block type to XML.
  * @param {string} generatorLanguage E.g. 'JavaScript', 'Python', 'PHP', 'Lua',
- *     'Dart'
+ *     'Dart', 'Rust'
  * @return {string} The concatenation of each block's generator code in the
  * desired format.
  */

@@ -92,6 +92,11 @@
       "import": "./python.mjs",
       "default": "./python_compressed.js"
     },
+    "./rust": {
+      "types": "./rust.d.ts",
+      "import": "./rust.mjs",
+      "default": "./rust_compressed.js"
+    },
     "./msg/*": {
       "types": "./msg/*.d.ts",
       "import": "./msg/*.mjs",

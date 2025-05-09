@@ -141,7 +141,7 @@ function packageUMDBundle() {
  */
 function packageLegacyEntrypoints(done) {
   for (entrypoint of [
-    'core', 'blocks', 'dart', 'javascript', 'lua', 'php', 'python'
+    'core', 'blocks', 'dart', 'javascript', 'lua', 'rust', 'php', 'python'
   ]) {
     const bundle =
         (entrypoint === 'core' ? 'blockly' : entrypoint) + '_compressed.js';
