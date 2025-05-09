@@ -156,7 +156,7 @@ const chunks = [
     files: ['generators/rust.js', 'generators/rust/**/*.js'], // Compiled JS files
     entry: 'generators/rust.js',                             // Compiled JS entry point
     scriptExport: 'rust',                                    // UMD export object name
-    scriptNamedExports: {'Blockly.Rust': 'rustGenerator'},   // Global name mapping
+    // scriptNamedExports: {'Blockly.Rust': 'rustGenerator'}, // Removed: Causes "object is not extensible" error
   },
 ];
 

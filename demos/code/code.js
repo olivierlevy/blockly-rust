@@ -366,7 +366,8 @@ Code.renderContent = function() {
   } else if (content.id === 'content_lua') {
     Code.attemptCodeGeneration(lua.luaGenerator);
   } else if (content.id === 'content_rust') {
-    Code.attemptCodeGeneration(Blockly.Rust);
+    // Access generator via the global 'rust' object created by scriptExport
+    Code.attemptCodeGeneration(rust.rustGenerator);
   }
   if (typeof PR === 'object') {
     PR.prettyPrint();
