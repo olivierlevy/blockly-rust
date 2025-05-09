@@ -75,7 +75,6 @@ export class RustGenerator extends CodeGenerator {
     // ];
 
     // Add block generators to the lookup table.
-    // Add block generators to the lookup table.
     this.forBlock['math_number'] = this.math_number;
     this.forBlock['text'] = this.text;
     this.forBlock['text_print'] = this.text_print;
@@ -114,14 +113,8 @@ export class RustGenerator extends CodeGenerator {
     // Variable setter.
     const argument0 = generator.valueToCode(block, 'VALUE',
         generator.ORDER_ASSIGNMENT) || '0'; // Default value if input is empty? Rust needs types. Defaulting to 0 might be wrong.
-                                            // Let's assume the input provides a typed value for now. Or use a default like `Default::default()`.
-                                            // For simplicity, let's use `""` as a placeholder if needed, though it won't compile if assigned to a number.
-                                            // A better default might depend on expected type, maybe `Default::default()`?
-                                            // Let's use `""` for now and refine later.
     const varName = generator.nameDB_!.getName(block.getFieldValue('VAR'), NameType.VARIABLE);
     // TODO: Handle variable types and declaration vs assignment properly.
-    // Assuming first assignment uses `let mut`. Reassignment just uses `varName = ...;`
-    // This basic version always uses `let mut`, which isn't correct for reassignment.
     return 'let mut ' + varName + ' = ' + argument0 + ';\\n';
   }
 
@@ -157,8 +150,9 @@ export class RustGenerator extends CodeGenerator {
     super.init(workspace); // Calls CodeGenerator's init
 
     // Always initialize nameDB_ for RustGenerator with its specific reserved words.
-    // Cast to `any` to bypass incorrect .d.ts typing for the Names constructor.
-    this.nameDB_ = new Names(this.rustReservedWords_ as any);
+    // The Names constructor expects a comma-separated string.
+    const reservedWordsString = Array.from(this.rustReservedWords_).join(',');
+    this.nameDB_ = new Names(reservedWordsString);
     
     this.nameDB_.setVariableMap(workspace.getVariableMap());
     this.nameDB_.populateVariables(workspace);
@@ -179,19 +173,7 @@ export class RustGenerator extends CodeGenerator {
     // TODO: Add any Rust-specific finalisation here.
     // This might include wrapping the code in a main function if necessary,
     // or adding standard imports.
-
-    // Convert the definitions dictionary into a list.
-    // const definitions = Object.values(this.definitions_);
-    // // Call Blockly.CodeGenerator.getDefinitions_ function to get all definitions
-    // // without triggering warning without typing the call.
-    // const allDefs = CodeGenerator.prototype.getDefinitions_.call(this);
-    // if (allDefs.length) {
-    //   code = allDefs.join('\\n\\n') + '\\n\\n\\n' + code;
-    // }
-    // code = super.finish(code); // This calls getDefinitions_
     
-    // For now, just return the code.
-    // We might need to add variable declarations or other setup code.
     let allDefs = '';
     if (this.definitions_ && Object.keys(this.definitions_).length > 0) {
         allDefs = Object.values(this.definitions_).join('\\n\\n') + '\\n\\n\\n';
@@ -200,7 +182,7 @@ export class RustGenerator extends CodeGenerator {
     // Clean up temporary data.
     this.definitions_ = Object.create(null);
     this.functionNames_ = Object.create(null);
-    this.nameDB_!.reset(); // Ensure nameDB_ is not null before calling reset
+    this.nameDB_!.reset(); 
     this.isInitialized = false;
     
     return allDefs + code;
@@ -214,8 +196,6 @@ export class RustGenerator extends CodeGenerator {
    */
   scrubNakedValue(line: string): string {
     // TODO: Rust might require statements to end with a semicolon,
-    // or expressions used as statements might need specific handling.
-    // For example, `expr;` or `let _ = expr;`
     return line + ';\\n';
   }
 
@@ -226,15 +206,11 @@ export class RustGenerator extends CodeGenerator {
    * @return Rust string.
    */
   quote_(string: string): string {
-    // TODO: Implement proper Rust string escaping.
-    // Rust uses "..." for strings and '...' for characters.
-    // Escaping rules: \n, \r, \t, \\, \", \0
-    // Unicode escapes: \xHH (byte), \u{HHHH} (Unicode scalar value)
     string = string.replace(/\\/g, '\\\\')
                .replace(/\n/g, '\\n')
                .replace(/\r/g, '\\r')
                .replace(/"/g, '\\"')
-               .replace(/'/g, "\\'"); // May not be needed if we always use "
+               .replace(/'/g, "\\'");
     return '"' + string + '"';
   }
 
@@ -251,28 +227,12 @@ export class RustGenerator extends CodeGenerator {
       console.warn(
           'Generator init was not called before blockToCode was called.');
     }
-    // TODO: Implement Rust-specific blockToCode logic if needed,
-    // or rely on the superclass implementation.
     return super.blockToCode(block, opt_thisOnly);
   }
-
-  /**
-   * Generate code for the specified block (and attached blocks).
-   * @param block The block to generate code for.
-   * @return The generated code.
-   */
-  // blockToCode(block: Block): string | [string, number] {
-  //   // Fallback for any unimplemented blocks.
-  //   // console.log('Unimplemented block: ' + block.type);
-  //   // return '';
-  //   return super.blockToCode(block);
-  // }
 }
 
 export const rustGenerator = new RustGenerator();
 
-// Make it available on the global Blockly object for non-module contexts
-// like demos/code/code.js
-if (typeof (globalThis as any).Blockly === 'object') {
-  ((globalThis as any).Blockly as any).Rust = rustGenerator;
-}
+// Removed assignment to global Blockly.Rust as it causes errors
+// with frozen/non-extensible Blockly object.
+// Generator should be accessed via the 'rust' global created by scriptExport.
