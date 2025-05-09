@@ -180,7 +180,8 @@ export function lists_getIndex(block: Block, generator: RustGenerator): [string,
 }
 
 export function lists_setIndex(block: Block, generator: RustGenerator): string {
-  const listVarName = generator.nameDB_!.getName(block.getFieldValue('LIST'),
+  const fieldName = block.getFieldValue('LIST');
+  const listVarName = generator.nameDB_!.getName(fieldName === null || fieldName === undefined ? 'default_list' : fieldName,
       'VARIABLE'); // Assuming the list is a variable
   const mode = block.getFieldValue('MODE') || 'SET'; // SET, INSERT
   const where = block.getFieldValue('WHERE') || 'FROM_START';

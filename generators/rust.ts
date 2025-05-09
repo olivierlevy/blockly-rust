@@ -147,9 +147,12 @@ export class RustGenerator extends CodeGenerator {
    * @param string Text to encode.
    * @return Rust string.
    */
-  quote_(string: string): string {
+  quote_(string: string | null | undefined): string {
     // Do not escape \n to \\n, as actual newlines are desired in the output.
     // The test runner or comparison tool should handle line ending normalization if necessary.
+    if (string === null || string === undefined) {
+      string = '';
+    }
     string = string.replace(/\\/g, '\\\\')
                // .replace(/\n/g, '\\n') // Removed this line
                .replace(/\r/g, '\\r') // Keep \r removal or normalization if needed

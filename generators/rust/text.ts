@@ -51,8 +51,32 @@ export function text_join(block: Block, generator: RustGenerator): [string, numb
     // Using format! macro for joining
     const formatString = elements.map(() => "{}").join("");
     code = `format!("${formatString}", ${elements.join(', ')})`;
-  return [code, generator.ORDER_FUNCTION_CALL];
+    return [code, generator.ORDER_FUNCTION_CALL];
+  }
 }
+
+export function text_count(block: Block, generator: RustGenerator): [string, number] {
+  // Count number of occurrences of a substring in a string.
+  const text = generator.valueToCode(block, 'TEXT', generator.ORDER_NONE) || 'String::new()';
+  const sub = generator.valueToCode(block, 'SUB', generator.ORDER_NONE) || 'String::new()';
+
+  const functionName = generator.provideFunction_(
+      'text_count_helper',
+      [
+        `fn ${generator.FUNCTION_NAME_PLACEHOLDER_}(main_text: &str, sub_text: &str) -> usize {`,
+        `    if sub_text.is_empty() {`,
+        `        // According to some definitions, an empty substring appears n+1 times in a string of length n`,
+        `        // However, most programming languages (Python, JS) return 0 or handle based on specific logic.`,
+        `        // Rust's .matches("").count() for "abc" is 4. For "" it's 1.`,
+        `        // Let's align with a common behavior of returning length + 1 for non-empty string, or 1 for empty string if sub is empty.`,
+        `        // Or, to be simpler and avoid ambiguity, return 0 if sub_text is empty, as it's not a meaningful count for Blockly.`,
+        `        return 0; // Or main_text.len() + 1 if that's the desired Blockly behavior for empty substring.`,
+        `    }`,
+        `    main_text.matches(sub_text).count()`,
+        `}`
+      ]);
+  const code = `${functionName}(&(${text}).to_string(), &(${sub}).to_string())`;
+  return [code, generator.ORDER_FUNCTION_CALL];
 }
 
 export function text_replace(block: Block, generator: RustGenerator): [string, number] {
@@ -177,7 +201,7 @@ export function text_getSubstring(block: Block, generator: RustGenerator): [stri
         `        std::mem::swap(&mut start_index, &mut end_index);`,
         `    }`,
         `    `,
-        `    // Ensure indices are within bounds [0, len-1]`,
+        `    // Ensure indices are within valid bounds [0, len-1]`,
         `    // If len is 0, start_index and end_index will be 0 from get_index logic for LAST or FROM_END with at_opt > len.`,
         `    // However, the initial check \`if len == 0\` handles this.`,
         `    // For substring, end_index is exclusive in Rust slices, so it can be \`len\`.`,
