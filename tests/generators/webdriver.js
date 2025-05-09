@@ -101,6 +101,10 @@ async function runGeneratorsInBrowser(outputDir) {
       function() {
         toPhp();
       });
+  await runLangGeneratorInBrowser(browser, prefix + '.rust',
+      function() {
+        toRust();
+      });
 
   await browser.deleteSession();
 }
